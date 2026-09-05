@@ -1,10 +1,11 @@
 <template>
-  <!-- eslint-disable-next-line vue/no-v-html -->
+  <!-- eslint-disable vue/no-v-html -- sanitized via sanitizeHtml() -->
   <div
     ref="htmlparser"
     class="t3-ce-rte"
     v-html="sanitizedContent"
   />
+  <!-- eslint-enable vue/no-v-html -->
 </template>
 
 <script lang="ts" setup>
