@@ -2,15 +2,14 @@
 image: node:18
 # Functions that should be executed before the build script is run
 before_script:
-  - npm install -g pnpm
   - cd docs
-  - pnpm install
+  - npm install
 pages:
   tags:
     - docker
     - i6
   script:
-    - pnpm run generate
+    - npm run generate
     - cp -r .output/public ../public
   artifacts:
     paths:

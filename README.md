@@ -64,5 +64,7 @@ Check out the [Nuxt 3 documentation](https://nuxt.com/docs/guide/concepts/module
 
 ## Development
 
+- Run `npm install` to install dependencies.
+- Run `npx playwright install chromium` once (required for the Playwright-based test suite).
 - Run `npm run dev:prepare` to generate type stubs.
 - Use `npm run dev` to start [playground](./playground) in development mode.

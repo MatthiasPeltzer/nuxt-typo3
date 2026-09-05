@@ -28,8 +28,8 @@
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
     "test": "vitest run",
     "lint": "eslint .",
-    "prerelease": "pnpm test && npx standard-version --prerelease alpha && git push --follow-tags && npm publish --tag alpha",
-    "release": "pnpm test && npx standard-version && git push --follow-tags && npm publish",
+    "prerelease": "npm test && npx standard-version --prerelease alpha && git push --follow-tags && npm publish --tag alpha",
+    "release": "npm test && npx standard-version && git push --follow-tags && npm publish",
     "commitlint": "commitlint --verbose",
     "husky:install": "husky"
   },
@@ -50,25 +50,23 @@
     "@nuxt/schema": "4.5.2",
     "@nuxt/test-utils": "^4.2.0",
     "@types/semver": "^7.8.0",
-    "eslint": "^10.10.0",
+    "eslint": "^9.28.0",
     "h3": "^1.15.11",
     "husky": "9.1.7",
     "listhen": "^1.10.1",
     "nuxt": "4.5.2",
-    "playwright": "^1.63.0",
+    "playwright": "^1.62.0",
     "standard-version": "9.5.0",
-    "typescript": "^6.0.3",
+    "typescript": "^5.9.3",
     "unbuild": "^3.6.1",
     "vitest": "^4.1.11",
     "vue-tsc": "3.3.11"
   },
-  "packageManager": "pnpm@9.14.4",
   "engines": {
     "node": ">=18.20.5",
-    "pnpm": ">=9.14.4"
+    "npm": ">=10"
   },
   "volta": {
-    "node": "22.12.0",
-    "pnpm": "9.14.4"
+    "node": "22.12.0"
   }
 }
