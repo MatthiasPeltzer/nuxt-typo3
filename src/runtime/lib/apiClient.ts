@@ -120,21 +120,26 @@ export class T3ApiClient implements T3Api {
    */
   filterQuery (path: string): string {
     const { baseUrl, allowQuery } = this.siteOptions.api
+    const defaultAcceptedQuery = 'type'
 
-    if (allowQuery && allowQuery === true) {
+    if (allowQuery === true) {
       return path
     }
 
     const url = new URL(path, baseUrl)
 
     if (!allowQuery) {
-      return url.pathname
+      const params = new URLSearchParams()
+      if (url.searchParams.has(defaultAcceptedQuery)) {
+        params.set(defaultAcceptedQuery, url.searchParams.get(defaultAcceptedQuery)!)
+      }
+      const search = params.toString()
+      return search ? `${url.pathname}?${search}` : url.pathname
     }
 
     const params = url.searchParams
-    const defaultAcceptedQuery = 'type'
 
-    if (allowQuery && Array.isArray(allowQuery)) {
+    if (Array.isArray(allowQuery)) {
       Array.from(params).forEach(([key]) => {
         if (allowQuery.includes(key) || key === defaultAcceptedQuery) {
           return

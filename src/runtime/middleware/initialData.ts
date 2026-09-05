@@ -82,14 +82,20 @@ async function fetchInitialData (to: RouteLocationNormalized) {
       data = await getInitialData(getInitialDataPath(initialDataFallback!))
     }
     initialData.value = data
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const fetchError = error as {
+      statusCode?: number
+      statusMessage?: string
+      message?: string
+      response?: { _data?: unknown }
+    }
     showError({
       fatal: true,
       unhandled: false,
-      statusCode: error.statusCode || 500,
-      statusMessage: error.statusMessage,
-      data: error.response?._data,
-      message: `Initial Data is unavailable: ${error.message}`
+      statusCode: fetchError.statusCode || 500,
+      statusMessage: fetchError.statusMessage,
+      data: fetchError.response?._data,
+      message: `Initial Data is unavailable: ${fetchError.message ?? 'Unknown error'}`
     })
   }
 }

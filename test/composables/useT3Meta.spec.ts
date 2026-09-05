@@ -1,10 +1,23 @@
 import { fileURLToPath } from 'node:url'
 import { describe, beforeAll, afterAll, it, expect } from 'vitest'
-import { listen, Listener } from 'listhen'
-import { createApp, eventHandler, toNodeListener } from 'h3'
+import { listen, type Listener } from 'listhen'
+import { createApp, eventHandler, getRequestURL, toNodeListener } from 'h3'
 import { setup, $fetch } from '@nuxt/test-utils'
 import initialData from '../fixtures/api/initialData.json'
 import pageData from '../fixtures/api/page.json'
+
+function createTypo3MockApp () {
+  return createApp().use(
+    '/',
+    eventHandler((event) => {
+      const url = getRequestURL(event)
+      if (url.searchParams.get('type') === '834') {
+        return initialData
+      }
+      return pageData
+    }),
+  )
+}
 
 await setup({
   server: true,
@@ -17,17 +30,7 @@ describe('useT3Meta', () => {
   let result
 
   beforeAll(async () => {
-    const app = createApp()
-      .use(
-        '/?type=834',
-        eventHandler(() => initialData)
-      )
-      .use(
-        '/',
-        eventHandler(() => pageData)
-      )
-
-    listener = await listen(toNodeListener(app), {
+    listener = await listen(toNodeListener(createTypo3MockApp()), {
       port: 9879
     })
     result = await $fetch('/meta')
@@ -42,7 +45,8 @@ describe('useT3Meta', () => {
   }, 15000)
 
   it('displays correct lang and dir attrs', () => {
-    expect(result).contains('lang="pl" dir="ltr"')
+    expect(result).toMatch(/lang="pl"/)
+    expect(result).toMatch(/dir="ltr"/)
   }, 15000)
 
   it('displays correct meta description', () => {

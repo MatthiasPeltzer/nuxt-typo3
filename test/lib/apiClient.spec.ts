@@ -17,24 +17,32 @@ const siteConfig = {
 }
 
 describe('T3ApiClient', () => {
-  const client = new T3ApiClient(siteConfig)
-  client.setHeaders({ Authorization: 'Token' })
   it('returns raw headers', () => {
+    const client = new T3ApiClient(siteConfig)
+    client.setHeaders({ Authorization: 'Token' })
     const { headers } = client.getOptions({})
     expect(headers).toEqual({ Authorization: 'Token' })
   })
 
-  it('use internal fetch instance with custom setup', async () => {
-    let requestOptions
+  it('uses internal fetch instance with custom setup', () => {
+    const client = new T3ApiClient(siteConfig)
+    client.setHeaders({ Authorization: 'Token' })
 
-    await client.$fetch('/', {
-      // eslint-disable-next-line require-await
-      async onRequest ({ options }) {
-        requestOptions = options
-      }
+    const options = client.getOptions({})
+
+    expect(options).toHaveProperty('baseURL', 'https://api.t3pwa.com')
+    expect((options.headers as Record<string, string>).Authorization).toBe('Token')
+  })
+
+  it('preserves the type query parameter when allowQuery is disabled', () => {
+    const client = new T3ApiClient({
+      ...siteConfig,
+      api: {
+        ...siteConfig.api,
+        allowQuery: false,
+      },
     })
 
-    expect(requestOptions).toHaveProperty('baseURL', 'https://api.t3pwa.com')
-    expect(requestOptions.headers.Authorization).toBe('Token')
+    expect(client.filterQuery('/about?type=834&utm_source=test')).toBe('/about?type=834')
   })
 })

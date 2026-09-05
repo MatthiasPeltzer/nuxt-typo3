@@ -12,7 +12,7 @@ const { pageData, getPage, getInitialData, initialData } = useT3Api()
 
 const route = useRoute().fullPath
 const { data: t3InitialData } = await useAsyncData(() =>
-  getInitialData('/', {
+  getInitialData('/?type=834', {
     baseURL: 'http://localhost:9879'
   })
 )

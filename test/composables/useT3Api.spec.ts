@@ -1,10 +1,23 @@
 import { fileURLToPath } from 'node:url'
 import { describe, beforeEach, afterEach, it, expect } from 'vitest'
 import { listen } from 'listhen'
-import { createApp, eventHandler, toNodeListener } from 'h3'
+import { createApp, eventHandler, getRequestURL, toNodeListener } from 'h3'
 import { setup, $fetch } from '@nuxt/test-utils'
 import initialData from '../fixtures/api/initialData.json'
 import pageData from '../fixtures/api/page.json'
+
+function createTypo3MockApp () {
+  return createApp().use(
+    '/',
+    eventHandler((event) => {
+      const url = getRequestURL(event)
+      if (url.searchParams.get('type') === '834') {
+        return initialData
+      }
+      return pageData
+    }),
+  )
+}
 
 await setup({
   server: true,
@@ -15,16 +28,7 @@ describe('useT3Api', () => {
   let listener
 
   beforeEach(async () => {
-    const app = createApp()
-      .use(
-        '/?type=834',
-        eventHandler(() => initialData)
-      )
-      .use(
-        '/',
-        eventHandler(() => pageData)
-      )
-    listener = await listen(toNodeListener(app), {
+    listener = await listen(toNodeListener(createTypo3MockApp()), {
       port: 9876
     })
   })

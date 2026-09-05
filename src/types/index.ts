@@ -44,7 +44,7 @@ export interface T3Site {
      * provide whitelist as array of string or disable
      * @default true
      */
-    allowQuery?: Boolean | Array<string>,
+    allowQuery?: boolean | Array<string>,
     /**
      * Provide custom endpoints
      */
@@ -138,7 +138,7 @@ export interface T3I18N {
 export interface T3Robots {
   noIndex: boolean
   noFollow: boolean
-  [key: string]: any
+  [key: string]: unknown
 }
 export interface T3Meta {
   title: string
@@ -162,17 +162,17 @@ export interface T3Meta {
 export interface T3PageAppearance {
   layout: string
   backendLayout: string
-  [key: string]: any
+  [key: string]: unknown
 }
 
 export interface T3Page extends T3RedirectData {
   id: number
   type: string
   slug: string
-  media: any[]
+  media: T3File[]
   meta: T3Meta
   categories: string
-  breadcrumbs: any[]
+  breadcrumbs: T3Navigation[]
   appearance: T3PageAppearance
   content: {
     [key: string]: T3ContentElement<T3CeBaseProps>[]
@@ -183,7 +183,7 @@ export interface T3Page extends T3RedirectData {
 export interface T3InitialData {
   navigation: T3Navigation[]
   i18n: T3I18N[]
-  [key: string]: any
+  [key: string]: unknown
 }
 
 export interface ModuleOptions extends Partial<T3Options> {

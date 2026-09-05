@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 // helper component to render nested list
 import { h, resolveComponent } from 'vue'
+import type { T3Menu } from '../../../types/T3Menu'
 
 interface T3CeMenuPagesListProps {
-  children: Array<any>;
+  children?: T3Menu[];
 }
 
 const props = withDefaults(defineProps<T3CeMenuPagesListProps>(), {

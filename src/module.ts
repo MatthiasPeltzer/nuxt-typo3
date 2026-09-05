@@ -11,7 +11,7 @@ import {
   checkNuxtCompatibility
 } from '@nuxt/kit'
 import type { $Fetch } from 'ofetch'
-import { T3ApiClient } from './runtime/lib/apiClient'
+import type { T3ApiClient } from './runtime/lib/apiClient'
 import type { T3InitialData, T3Page, T3RedirectData, ModuleOptions, T3RuntimeConfig } from './types'
 
 export * from './types'
@@ -41,7 +41,7 @@ export default defineNuxtModule<ModuleOptions>({
         initialData: '/?type=834',
         initialDataFallback: '/?type=834'
       },
-      allowQuery: true
+      allowQuery: false
     },
     i18n: {
       default: 'en',
@@ -102,6 +102,7 @@ export default defineNuxtModule<ModuleOptions>({
 
     addImportsDir(resolver.resolve('runtime/composables/**/*'))
     addImportsDir(resolver.resolve('runtime/components/**/*'))
+    addImportsDir(resolver.resolve('runtime/utils'))
 
     addComponentsDir({
       path: fileURLToPath(new URL('./runtime/components', import.meta.url)),
@@ -127,7 +128,7 @@ const mergeSiteOptions = (options: ModuleOptions) => {
     delete defaulOptions.sites
     const siteOptions = defu(site, defaulOptions)
     if (site.i18n?.locales) {
-      siteOptions.i18n.locales = [...new Set([...defaulOptions.i18n!.locales, ...site.i18n?.locales])]
+      siteOptions.i18n.locales = [...new Set([...defaulOptions.i18n!.locales, ...(site.i18n?.locales ?? [])])]
     }
     return siteOptions
   })

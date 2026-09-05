@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url'
 import { describe, beforeEach, afterEach, it, expect } from 'vitest'
-import { listen, Listener } from 'listhen'
+import { listen, type Listener } from 'listhen'
 import { createApp, eventHandler, toNodeListener } from 'h3'
 import { setup, $fetch } from '@nuxt/test-utils'
 import initialData from '../fixtures/api/initialData.json'

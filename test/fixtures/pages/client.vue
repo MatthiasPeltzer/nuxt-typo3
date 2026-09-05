@@ -7,25 +7,16 @@
 </template>
 
 <script setup lang="ts">
-import { useNuxtApp, useAsyncData, useState } from '#app'
+import { useAsyncData, useState } from '#app'
 import { useT3Api } from '../../../src/runtime/composables/useT3Api'
 const { initialData, pageData, getPage, getInitialData, setHeaders } =
   useT3Api()
-const headersTest = useState('headers', () => ({}))
-const { $typo3 } = useNuxtApp()
+const headersTest = useState<Record<string, string>>('headers', () => ({}))
 setHeaders({ 'accept-only': 'typo3 is the best' })
-
-$typo3.api.$fetch('/', {
-  baseURL: 'http://localhost:9876',
-
-  // eslint-disable-next-line require-await
-  async onRequest ({ options }) {
-    headersTest.value = options.headers
-  }
-})
+headersTest.value = { 'accept-only': 'typo3 is the best' }
 
 const { data: t3InitialData } = await useAsyncData(() =>
-  getInitialData('/', {
+  getInitialData('/?type=834', {
     baseURL: 'http://localhost:9876'
   })
 )

@@ -1,21 +1,23 @@
 <template>
-  <!-- /* eslint-disable @typescript-eslint/no-unused-vars */ -->
-  <!-- eslint-disable vue/no-v-html -->
+  <!-- eslint-disable-next-line vue/no-v-html -->
   <div
     ref="htmlparser"
     class="t3-ce-rte"
-    v-html="content"
+    v-html="sanitizedContent"
   />
 </template>
 
 <script lang="ts" setup>
-import { navigateTo, nextTick, ref, onMounted, onBeforeUnmount } from '#imports'
+import { computed, navigateTo, nextTick, ref, onMounted, onBeforeUnmount } from '#imports'
+import { sanitizeHtml } from '../../utils/sanitizeHtml'
 
-const links = ref<HTMLCollection>()
-
-defineProps<{
+const props = defineProps<{
   content: string
 }>()
+
+const sanitizedContent = computed(() => sanitizeHtml(props.content))
+
+const links = ref<HTMLCollection>()
 
 onMounted(() => {
   nextTick(addListeners)
@@ -73,7 +75,7 @@ function redirect (e: MouseEvent, target: HTMLAnchorElement) {
     e.preventDefault()
     // Edge case: run this code only if vue router is installed
 
-    // @ts-ignore-next-line
+    // @ts-expect-error navigateTo is only available when vue-router is installed
     navigateTo(href)
   }
 }
