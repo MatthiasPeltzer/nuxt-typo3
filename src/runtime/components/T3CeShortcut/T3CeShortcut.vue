@@ -1,18 +1,15 @@
-<script lang="ts">
-import { h, resolveComponent } from 'vue'
+<template>
+  <div class="t3-ce-shortcut">
+    <T3Renderer :content="shortcut" />
+  </div>
+</template>
+
+<script setup lang="ts">
 import type { T3CeBaseProps } from '../../../module'
 
-export interface T3CeShortcutInterface {
+interface T3CeShortcutProps {
   shortcut: Array<T3CeBaseProps>
 }
 
-const T3CeShortcut = (props: T3CeShortcutInterface) => {
-  return h('div', null, [
-    h(resolveComponent('T3Renderer'), {
-      content: props.shortcut
-    })
-  ])
-}
-
-export default T3CeShortcut
+defineProps<T3CeShortcutProps>()
 </script>
