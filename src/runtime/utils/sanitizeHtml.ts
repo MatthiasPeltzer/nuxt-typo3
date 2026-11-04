@@ -51,6 +51,8 @@ const RTE_ALLOWED_ATTRIBUTES: sanitizeHtmlLib.IOptions['allowedAttributes'] = {
   img: ['src', 'alt', 'width', 'height'],
   td: ['colspan', 'rowspan'],
   th: ['colspan', 'rowspan'],
+  ol: ['style'],
+  ul: ['style'],
 }
 
 const SVG_ALLOWED_TAGS = [
@@ -77,12 +79,64 @@ const SVG_ALLOWED_ATTRIBUTES: sanitizeHtmlLib.IOptions['allowedAttributes'] = {
   rect: ['x', 'y', 'width', 'height', 'fill', 'class'],
 }
 
+const ALLOWED_LIST_STYLE_TYPES = new Set([
+  'circle',
+  'decimal',
+  'decimal-leading-zero',
+  'disc',
+  'lower-alpha',
+  'lower-latin',
+  'lower-roman',
+  'none',
+  'square',
+  'upper-alpha',
+  'upper-latin',
+  'upper-roman',
+])
+
+function normalizeListStyleAttribute (style?: string): Record<string, string> {
+  if (!style) {
+    return {}
+  }
+
+  const match = style.match(/list-style-type\s*:\s*([^;]+)/i)
+  if (!match) {
+    return {}
+  }
+
+  const value = match[1].trim().toLowerCase()
+  if (!ALLOWED_LIST_STYLE_TYPES.has(value)) {
+    return {}
+  }
+
+  return { style: `list-style-type:${value};` }
+}
+
+function transformListTag (
+  tagName: string,
+  attribs: Record<string, string>,
+): { tagName: string, attribs: Record<string, string> } {
+  const { style, ...rest } = attribs
+
+  return {
+    tagName,
+    attribs: {
+      ...rest,
+      ...normalizeListStyleAttribute(style),
+    },
+  }
+}
+
 const SANITIZE_OPTIONS: sanitizeHtmlLib.IOptions = {
   allowedTags: RTE_ALLOWED_TAGS,
   allowedAttributes: RTE_ALLOWED_ATTRIBUTES,
   allowedSchemes: ['http', 'https', 'mailto', 'tel'],
   allowProtocolRelative: false,
   disallowedTagsMode: 'discard',
+  transformTags: {
+    ol: transformListTag,
+    ul: transformListTag,
+  },
 }
 
 const SVG_SANITIZE_OPTIONS: sanitizeHtmlLib.IOptions = {

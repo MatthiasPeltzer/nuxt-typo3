@@ -18,6 +18,20 @@ describe('sanitizeHtml', () => {
     const input = '<a href="javascript:alert(1)">x</a>'
     expect(sanitizeHtml(input)).not.toContain('javascript:')
   })
+
+  it('preserves list-style-type on ul and ol', () => {
+    const input = '<ul style="list-style-type:disc;"><li>a</li></ul><ol style="list-style-type:upper-latin;"><li>b</li></ol>'
+    expect(sanitizeHtml(input)).toContain('list-style-type:disc')
+    expect(sanitizeHtml(input)).toContain('list-style-type:upper-latin')
+  })
+
+  it('strips unsafe inline styles from lists', () => {
+    const input = '<ul style="list-style-type:disc;background:url(javascript:alert(1))"><li>a</li></ul>'
+    const output = sanitizeHtml(input)
+    expect(output).toContain('list-style-type:disc')
+    expect(output).not.toContain('javascript')
+    expect(output).not.toContain('background')
+  })
 })
 
 describe('sanitizeInlineSvg', () => {
